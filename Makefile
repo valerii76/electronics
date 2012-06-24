@@ -12,13 +12,13 @@ CC             = avr-gcc
 # Override is only needed by avr-lib build system.
 
 override CFLAGS        = -g -Wall $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
-override LDFLAGS       = -Wl,-Map,$(PRG).map
+override LDFLAGS       = -Wl,-Map,$(PRG).map,-lm
 
 OBJCOPY        = avr-objcopy
 OBJDUMP        = avr-objdump
 
 OBJ = \
-	src/main.c
+	src/src/main.c
 
 all: $(PRG).elf lst text eeprom
 

@@ -18,25 +18,35 @@
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 
+#include "config.h"
+
 #include <stdlib.h>
 
-#define LCD_PORT PORTC
-#define LCD_DDR DDRC
-#define CS PC0
-#define SCLK PC1
-#define SDA PC2
+#include "nokia_1202.h"
+/*#include "math/fixed.h"*/
 
-#define SBI(p, b) ((p) |= 1 << (b))
-#define CBI(p, b) ((p) &= ~(1 << (b)))
-
-#include "lcd/nokia_1202.h"
-
-int main ()
+int main (int argc, char *argv[])
 {
-
-    /*int8_t x, y, w, h;*/
+    /*fixed_t x = INT2FIXED (34), y = 0, d;*/
+    /*int8_t i;*/
 
     lcd_init();
+    lcd_clr();
+    lcd_draw_line (0, 0, 68, 96);
+    lcd_draw_line (68, 0, 0, 96);
+
+    /*d = fixed_div (FM_PI << 1, INT2FIXED (96));*/
+
+    /*for (i = 1; i < 96; ++i)*/
+    /*{*/
+        /*fixed_t s, c;*/
+        /*fixed_t new_x = INT2FIXED (34);*/
+        /*y += d;*/
+        /*fixed_sico (y, &s, &c);*/
+        /*new_x += fixed_mul (s, INT2FIXED (34));*/
+        /*lcd_draw_line (FIXED2INT (x), i-1, FIXED2INT (new_x), i);*/
+        /*x = new_x;*/
+    /*}*/
 
     /*lcd_string_pgm (PSTR("Valerii76"));*/
 
@@ -52,8 +62,8 @@ int main ()
     /*}*/
 
 
-    lcd_draw_line (0, 0, 68, 96);
-    lcd_draw_line (68, 0, 0, 96);
+    /*lcd_draw_line (0, 0, 68, 96);*/
+    /*lcd_draw_line (68, 0, 0, 96);*/
 
 
     return 0;

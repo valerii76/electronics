@@ -1,11 +1,31 @@
-/* LCD Nokia 1202 library */
+/*
+ * =====================================================================================
+ *
+ *       Filename:  nokia_1202.c
+ *
+ *    Description:  
+ *
+ *        Version:  1.0
+ *        Created:  24.06.2012 11:54:18
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Valery Volgutov (Valery Volgutov), valerii76@gmail.com
+ *        Company:  3VSoft
+ *
+ * =====================================================================================
+ */
+#include "nokia_1202.h"
 
-#if !defined (__NOKIA_1202_H__)
-#define __NOKIA_1202_H__
+#include <avr/pgmspace.h>
 
-#include "lcd/font.h"
-#include "lcd/font_15x24.h"
-#include "lcd/font_15x24_5.h"
+#if defined (BUILDIN_FONT)
+
+#include "font.h"
+#include "font_15x24.h"
+#include "font_15x24_5.h"
+
+#endif
 
 #if !defined (LCD_PORT)
 #warning "LCD_PORT is not defined - set default value (PORTD)"
@@ -17,19 +37,19 @@
 #define LCD_DDR DDRD
 #endif
 
-#if !defined (CS)
-#warning "CS is not defined - set default value (PD0)"
-#define CS_PIN PD0
+#if !defined (LCD_CS)
+#warning "LCD_CS is not defined - set default value (PD0)"
+#define LCD_CS PD0
 #endif
 
-#if !defined (SCLK)
-#warning "SCLK is not defined - set default value (PD1)"
-#define SCLK_PIN PD1
+#if !defined (LCD_SCLK)
+#warning "LCD_SCLK is not defined - set default value (PD1)"
+#define LCD_SCLK PD1
 #endif
 
-#if !defined (SDA)
-#warning "SDA is not defined - set default value (PD2)"
-#define SDA_PIN PD2
+#if !defined (LCD_SDA)
+#warning "LCD_SDA is not defined - set default value (PD2)"
+#define LCD_SDA PD2
 #endif
 
 #if !defined (SBI)
@@ -41,8 +61,8 @@
 #endif
 
 /* delay 6ms */
-void
-delay ()
+static void
+_lcd_delay (void)
 {
     //_delay_ms(60);
     //unsigned int a, c;
@@ -53,7 +73,7 @@ delay ()
 }
 
 /* send byte to LCD */
-inline void
+void
 lcd_byte (uint8_t i)
 {
     uint8_t d,c;
@@ -63,14 +83,14 @@ lcd_byte (uint8_t i)
         d = i & 0x80;
         if (d == 0)
         {
-            CBI (LCD_PORT, SDA);
+            CBI (LCD_PORT, LCD_SDA);
         }
         else
         {
-            SBI (LCD_PORT, SDA);
+            SBI (LCD_PORT, LCD_SDA);
         }
-        SBI (LCD_PORT, SCLK);
-        CBI (LCD_PORT, SCLK);
+        SBI (LCD_PORT, LCD_SCLK);
+        CBI (LCD_PORT, LCD_SCLK);
         i = i << 1;
     }
 }
@@ -79,11 +99,11 @@ lcd_byte (uint8_t i)
 void
 lcd_cmd (uint8_t i)
 {
-    CBI (LCD_PORT, SCLK);
-    CBI (LCD_PORT, CS);
-    CBI (LCD_PORT, SDA);
-    SBI (LCD_PORT, SCLK);
-    CBI (LCD_PORT, SCLK);
+    CBI (LCD_PORT, LCD_SCLK);
+    CBI (LCD_PORT, LCD_CS);
+    CBI (LCD_PORT, LCD_SDA);
+    SBI (LCD_PORT, LCD_SCLK);
+    CBI (LCD_PORT, LCD_SCLK);
 
     lcd_byte (i);
 }
@@ -92,35 +112,35 @@ lcd_cmd (uint8_t i)
 void
 lcd_data (uint8_t i)
 {
-    CBI (LCD_PORT, SCLK);
-    CBI (LCD_PORT, CS);
-    SBI (LCD_PORT, SDA);
-    SBI (LCD_PORT, SCLK);
-    CBI (LCD_PORT, SCLK);
+    CBI (LCD_PORT, LCD_SCLK);
+    CBI (LCD_PORT, LCD_CS);
+    SBI (LCD_PORT, LCD_SDA);
+    SBI (LCD_PORT, LCD_SCLK);
+    CBI (LCD_PORT, LCD_SCLK);
 
     lcd_byte (i);
 }
 
 /* LCD clean */
 void
-lcd_clr ()
+lcd_clr (void)
 {
     uint16_t i;
 
     /* Page address set */
     lcd_cmd (0xB0);
-    SBI (LCD_PORT, CS);
+    SBI (LCD_PORT, LCD_CS);
 
     /* colum address set */
     lcd_cmd (0x10);
     lcd_cmd (0x00);
-    SBI (LCD_PORT, CS);
+    SBI (LCD_PORT, LCD_CS);
 
     for (i = 0; i < 864; i++)
     {
         lcd_data (0);
     }
-    SBI (LCD_PORT, CS);
+    SBI (LCD_PORT, LCD_CS);
 }
 
 /* set cursor position */
@@ -130,160 +150,92 @@ lcd_pos (uint8_t row, uint8_t col)
 
     /* Page address set */
     lcd_cmd (0xB0 | (row & 0x0F));
-    SBI (LCD_PORT, CS);
+    SBI (LCD_PORT, LCD_CS);
     /* Sets the DDRAM colum address - upper 3-bit */
     lcd_cmd (0x10 | (col >> 4));
     /* lower 4-bit */
     lcd_cmd (0x00 | (col & 0x0F));
-    SBI (LCD_PORT, CS);
+    SBI (LCD_PORT, LCD_CS);
 }
 
 /* LCD init */
 void
-lcd_init ()
+lcd_init (void)
 {
-    SBI (LCD_DDR, CS);
-    SBI (LCD_DDR, SCLK);
-    SBI (LCD_DDR, SDA);
+    SBI (LCD_DDR, LCD_CS);
+    SBI (LCD_DDR, LCD_SCLK);
+    SBI (LCD_DDR, LCD_SDA);
 
-    SBI (LCD_PORT, CS);
-    CBI (LCD_PORT, SCLK);
+    SBI (LCD_PORT, LCD_CS);
+    CBI (LCD_PORT, LCD_SCLK);
 
-    delay ();
-    delay ();
+    _lcd_delay ();
+    _lcd_delay ();
 
     /* reset */
     lcd_cmd (0xE2);
-    SBI (LCD_PORT, CS);
-    delay ();
-    delay ();
+    SBI (LCD_PORT, LCD_CS);
+    _lcd_delay ();
+    _lcd_delay ();
 
     /* multiple factor x4 */
     lcd_cmd (0x3D);
-    SBI (LCD_PORT, CS);
-    delay ();
-    delay ();
+    SBI (LCD_PORT, LCD_CS);
+    _lcd_delay ();
+    _lcd_delay ();
     lcd_cmd (0x01);
-    SBI (LCD_PORT, CS);
-    delay ();
-    delay ();
+    SBI (LCD_PORT, LCD_CS);
+    _lcd_delay ();
+    _lcd_delay ();
 
     /* power saver off */
     lcd_cmd (0xA4);
-    SBI (LCD_PORT, CS);
-    delay ();
+    SBI (LCD_PORT, LCD_CS);
+    _lcd_delay ();
 
     /* normal DRAM */
     lcd_cmd (0xA6);
-    SBI (LCD_PORT, CS);
+    SBI (LCD_PORT, LCD_CS);
 
     /* normal mode */
     lcd_cmd (0xA4);
-    SBI (LCD_PORT, CS);
+    SBI (LCD_PORT, LCD_CS);
 
     /* col normal */
     lcd_cmd (0xA0);
-    SBI (LCD_PORT, CS);
+    SBI (LCD_PORT, LCD_CS);
 
     /* driver normal */
     lcd_cmd (0xC0);
-    SBI (LCD_PORT, CS);
+    SBI (LCD_PORT, LCD_CS);
 
     /* VOR def */
     lcd_cmd (0x24);
-    SBI (LCD_PORT, CS);
+    SBI (LCD_PORT, LCD_CS);
 
     /* contrast */
     lcd_cmd (0xE1);
     /* def */
     lcd_cmd (0x80);
-    SBI (LCD_PORT, CS);
+    SBI (LCD_PORT, LCD_CS);
 
     /* El vol - def */
     lcd_cmd (0x90);
-    SBI (LCD_PORT, CS);
+    SBI (LCD_PORT, LCD_CS);
 
     /* poser control set */
     lcd_cmd(0x2F);
-    SBI (LCD_PORT, CS);
+    SBI (LCD_PORT, LCD_CS);
 
     /* LCD display on */
     lcd_cmd (0xAF);
-    SBI (LCD_PORT, CS);
+    SBI (LCD_PORT, LCD_CS);
 
     lcd_clr ();
 
     lcd_pos (0, 0);
 
-    SBI (LCD_PORT, CS);
-}
-
-/* print symbol (6x8) */
-void
-lcd_char (char c)
-{
-    uint8_t line;
-    uint8_t ch;
-    uint8_t const *f = (uint8_t const*) &(font6_8[(c - 32) * 6]);
-
-    for (line = 0; line < 6; ++line, ++f)
-    {
-        ch = pgm_read_byte (f);
-        lcd_data (ch);
-    }
-    SBI (LCD_PORT, CS);
-}
-
-/* print string (null terminated) */
-void
-lcd_string_ram (char const *str)
-{
-    while (*str)
-    {
-        lcd_char (*str);
-        ++str;
-    }
-}
-
-/* print string (null terminated) */
-void
-lcd_string_pgm (char const *str)
-{
-    while (pgm_read_byte (str))
-    {
-        lcd_char (pgm_read_byte (str));
-        ++str;
-    }
-}
-
-
-/* print big (16x24) symbol */
-void
-lcd_big_char (uint8_t row, uint8_t col, char chr)
-{
-    uint8_t const *f0;
-    uint8_t const *f;
-    uint8_t r, c, y;
-    uint8_t ch;
-    y = (chr & 0x0F);
-
-    if (y < 6)
-        f0 = Tahoma15x24 + y * 45;
-    else
-        f0 = Tahoma15x24_5 + (y - 6) * 45;
-
-    for (r = 0; r < 3; ++r)
-    {
-        f = f0 + r;
-        lcd_pos ((row + r), col);
-        for (c = 0; c < 14; ++c)
-        {
-            ch = pgm_read_byte (f);
-            lcd_data (ch);
-            f = f + 3;
-        }
-    }
-    SBI (LCD_PORT, CS);
+    SBI (LCD_PORT, LCD_CS);
 }
 
 /* draw line */
@@ -384,4 +336,74 @@ lcd_draw_line (uint8_t xn, uint8_t yn, uint8_t xk, uint8_t yk)
     lcd_data (data);
 }
 
-#endif//__NOKIA_1202_H__
+#if defined (BUILDIN_FONT)
+
+/* print symbol (6x8) */
+void
+lcd_char (uint8_t c)
+{
+    uint8_t line;
+    uint8_t ch;
+    uint8_t const *f = (uint8_t const*) &(font6_8[(c - 32) * 6]);
+
+    for (line = 0; line < 6; ++line, ++f)
+    {
+        ch = pgm_read_byte (f);
+        lcd_data (ch);
+    }
+    SBI (LCD_PORT, LCD_CS);
+}
+
+/* print string (null terminated) */
+void
+lcd_string_ram (char const *str)
+{
+    while (*str)
+    {
+        lcd_char (*str);
+        ++str;
+    }
+}
+
+/* print string (null terminated) */
+void
+lcd_string_pgm (char const *str)
+{
+    while (pgm_read_byte (str))
+    {
+        lcd_char (pgm_read_byte (str));
+        ++str;
+    }
+}
+
+
+/* print big (16x24) symbol */
+void
+lcd_big_char (uint8_t row, uint8_t col, char chr)
+{
+    uint8_t const *f0;
+    uint8_t const *f;
+    uint8_t r, c, y;
+    uint8_t ch;
+    y = (chr & 0x0F);
+
+    if (y < 6)
+        f0 = Tahoma15x24 + y * 45;
+    else
+        f0 = Tahoma15x24_5 + (y - 6) * 45;
+
+    for (r = 0; r < 3; ++r)
+    {
+        f = f0 + r;
+        lcd_pos ((row + r), col);
+        for (c = 0; c < 14; ++c)
+        {
+            ch = pgm_read_byte (f);
+            lcd_data (ch);
+            f = f + 3;
+        }
+    }
+    SBI (LCD_PORT, LCD_CS);
+}
+
+#endif
