@@ -1,17 +1,16 @@
 cmake_minimum_required (VERSION 2.6)
 
-include (${BASE_DIRECTORY}/winavr.cmake)
 include (${BASE_DIRECTORY}/settings.cmake)
 
 project (lcd)
 
-message ("Build lcd library\n")
+message ("Build lcd library")
 
 set (HEADER_FILES
-    include/font.h
-    include/font_15x24.h
-    include/font_15x24_5.h
-    include/nokia_1202.h)
+    src/font.h
+    src/font_15x24.h
+    src/font_15x24_5.h
+    src/nokia_1202.h)
 
 set (SOURCE_FILES
     src/nokia_1202.c)
