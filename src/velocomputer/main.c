@@ -32,8 +32,10 @@ int main (int argc, char *argv[])
 
     lcd_init();
     lcd_clr();
-    lcd_draw_line (0, 0, 68, 96);
-    lcd_draw_line (68, 0, 0, 96);
+    /*lcd_draw_line (0, 0, 68, 96);*/
+    /*lcd_draw_line (68, 0, 0, 96);*/
+    lcd_string_pgm (PSTR ("3VSOFT"), 4, 20);
+    /*lcd_char ('W', 0, 0);*/
 
     /*d = fixed_div (FM_PI << 1, INT2FIXED (96));*/
 

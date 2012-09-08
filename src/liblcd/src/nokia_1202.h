@@ -29,16 +29,18 @@ void lcd_draw_line (uint8_t xn, uint8_t yn, uint8_t xk, uint8_t yk);
 #if defined(BUILDIN_FONT)
 
 /* print symbol (6x8) */
-void lcd_char (uint8_t c);
+void lcd_char (uint8_t c, uint8_t row, uint8_t *col);
 
 /* print string (null terminated) */
-void lcd_string_ram (char const *str);
+void lcd_string_ram (char const *str, uint8_t row, uint8_t col);
 
 /* print string (null terminated) */
-void lcd_string_pgm (char const *str);
+void lcd_string_pgm (char const *str, uint8_t row, uint8_t col);
 
+#if 0
 /* print big (16x24) symbol */
 void lcd_big_char (uint8_t row, uint8_t col, char chr);
+#endif
 
 #endif
 

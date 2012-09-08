@@ -18,14 +18,7 @@
 #include "nokia_1202.h"
 
 #include <avr/pgmspace.h>
-
-#if defined (BUILDIN_FONT)
-
-#include "font.h"
-#include "font_15x24.h"
-#include "font_15x24_5.h"
-
-#endif
+#include <util/delay.h>
 
 #if !defined (LCD_PORT)
 #warning "LCD_PORT is not defined - set default value (PORTD)"
@@ -338,6 +331,12 @@ lcd_draw_line (uint8_t xn, uint8_t yn, uint8_t xk, uint8_t yk)
 
 #if defined (BUILDIN_FONT)
 
+#if 0
+
+#include "font.h"
+#include "font_15x24.h"
+#include "font_15x24_5.h"
+
 /* print symbol (6x8) */
 void
 lcd_char (uint8_t c)
@@ -376,7 +375,6 @@ lcd_string_pgm (char const *str)
     }
 }
 
-
 /* print big (16x24) symbol */
 void
 lcd_big_char (uint8_t row, uint8_t col, char chr)
@@ -405,5 +403,126 @@ lcd_big_char (uint8_t row, uint8_t col, char chr)
     }
     SBI (LCD_PORT, LCD_CS);
 }
+
+#else
+
+#include "font_ostin16.h"
+#define ARR_SIZE(x) sizeof (x) / (sizeof ((x)[0]))
+
+
+static void
+lcd_debug_led_flash (uint8_t n)
+{
+    SBI (DDRD, PD0);
+
+    while (n--)
+    {
+        SBI (PORTD, PD0);
+        _delay_ms (500);
+        CBI (PORTD, PD0);
+        _delay_ms (500);
+    }
+}
+
+
+static void
+lcd_find_char (uint8_t const *font, uint8_t ch, uint8_t **data)
+{
+    uint8_t w, h;
+    uint8_t i = 0;
+    uint8_t *f = (uint8_t*) &(font[1]);
+    *data = 0;
+
+    for (; i < font [0]; ++i)
+    {
+        if (pgm_read_byte (&f [0]) == ch)
+        {
+            /*lcd_debug_led_flash (3);*/
+            *data = &f [1];
+            return;
+        }
+        h = pgm_read_byte (&f [1]);
+        w = h & 0x3F;
+        h >>= 6;
+        f += w * h + 2;
+    }
+}
+
+void
+lcd_char (uint8_t c, uint8_t row, uint8_t *col)
+{
+    uint8_t line;
+    uint8_t ch;
+    uint8_t w;
+    uint8_t h;
+    uint8_t *data;
+
+
+    lcd_find_char (font_Octin16, c, &data);
+
+    if (!data)
+        return;
+
+
+    h = pgm_read_byte (data);
+
+    w = h & 0x3F;
+    h >>= 6;
+    ++data;
+
+    for (; h--;)
+    {
+        lcd_pos (row++, *col);
+        for (line = 0; line < w; ++line, ++data)
+        {
+            ch = pgm_read_byte (data);
+            lcd_data (ch);
+        }
+    }
+    *col += w;
+    SBI (LCD_PORT, LCD_CS);
+}
+
+/* print string (null terminated) */
+void
+lcd_string_ram (char const *str, uint8_t row, uint8_t col)
+{
+    uint8_t c;
+    uint8_t sp = pgm_read_byte (&font_Octin16 [ARR_SIZE (font_Octin16) - 1]);
+    while (c = *str)
+    {
+        if (c == ' ')
+            col += sp;
+        else
+        {
+            ++col;
+            lcd_char (*str, row, &col);
+        }
+        ++str;
+    }
+}
+
+/* print string (null terminated) */
+void
+lcd_string_pgm (char const *str, uint8_t row, uint8_t col)
+{
+    uint8_t c;
+    uint8_t sp = pgm_read_byte (&font_Octin16 [ARR_SIZE (font_Octin16) - 1]);
+    lcd_debug_led_flash (sp);
+
+    while (c = pgm_read_byte (str))
+    {
+        if (c == ' ')
+            col += sp;
+        else
+        {
+            ++col;
+            lcd_char (pgm_read_byte (str), row, &col);
+        }
+        ++str;
+    }
+}
+
+#endif
 
 #endif
