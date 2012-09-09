@@ -5,15 +5,6 @@
 
 #include <avr/io.h>
 
-/* send byte to LCD */
-void lcd_byte (uint8_t i);
-
-/* send command to LCD */
-void lcd_cmd (uint8_t i);
-
-/* send data to LCD */
-void lcd_data (uint8_t i);
-
 /* LCD clean */
 void lcd_clr (void);
 
@@ -26,22 +17,10 @@ void lcd_init (void);
 /* draw line */
 void lcd_draw_line (uint8_t xn, uint8_t yn, uint8_t xk, uint8_t yk);
 
-#if defined(BUILDIN_FONT)
-
-/* print symbol (6x8) */
-void lcd_char (uint8_t c, uint8_t row, uint8_t *col);
-
 /* print string (null terminated) */
 void lcd_string_ram (char const *str, uint8_t row, uint8_t col);
 
 /* print string (null terminated) */
 void lcd_string_pgm (char const *str, uint8_t row, uint8_t col);
-
-#if 0
-/* print big (16x24) symbol */
-void lcd_big_char (uint8_t row, uint8_t col, char chr);
-#endif
-
-#endif
 
 #endif//__NOKIA_1202_H__

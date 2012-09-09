@@ -24,18 +24,23 @@
 
 #include "nokia_1202.h"
 /*#include "math/fixed.h"*/
+#include "dbg_flash.h"
+#include "dbg_uart.h"
+
+#include <util/delay.h>
 
 int main (int argc, char *argv[])
 {
     /*fixed_t x = INT2FIXED (34), y = 0, d;*/
     /*int8_t i;*/
 
+    dbg_uart_init (2400);
+
     lcd_init();
     lcd_clr();
     /*lcd_draw_line (0, 0, 68, 96);*/
     /*lcd_draw_line (68, 0, 0, 96);*/
-    lcd_string_pgm (PSTR ("3VSOFT"), 4, 20);
-    /*lcd_char ('W', 0, 0);*/
+    lcd_string_pgm (PSTR ("3VSOFT"), (uint8_t) 4, (uint8_t) 20);
 
     /*d = fixed_div (FM_PI << 1, INT2FIXED (96));*/
 

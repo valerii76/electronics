@@ -18,7 +18,9 @@
 #include "nokia_1202.h"
 
 #include <avr/pgmspace.h>
-#include <util/delay.h>
+
+#include "font_ostin16.h"
+#define ARR_SIZE(x) sizeof (x) / (sizeof ((x)[0]))
 
 #if !defined (LCD_PORT)
 #warning "LCD_PORT is not defined - set default value (PORTD)"
@@ -66,7 +68,7 @@ _lcd_delay (void)
 }
 
 /* send byte to LCD */
-void
+static void
 lcd_byte (uint8_t i)
 {
     uint8_t d,c;
@@ -89,7 +91,7 @@ lcd_byte (uint8_t i)
 }
 
 /* send command to LCD */
-void
+static void
 lcd_cmd (uint8_t i)
 {
     CBI (LCD_PORT, LCD_SCLK);
@@ -102,7 +104,7 @@ lcd_cmd (uint8_t i)
 }
 
 /* send data to LCD */
-void
+static void
 lcd_data (uint8_t i)
 {
     CBI (LCD_PORT, LCD_SCLK);
@@ -329,102 +331,6 @@ lcd_draw_line (uint8_t xn, uint8_t yn, uint8_t xk, uint8_t yk)
     lcd_data (data);
 }
 
-#if defined (BUILDIN_FONT)
-
-#if 0
-
-#include "font.h"
-#include "font_15x24.h"
-#include "font_15x24_5.h"
-
-/* print symbol (6x8) */
-void
-lcd_char (uint8_t c)
-{
-    uint8_t line;
-    uint8_t ch;
-    uint8_t const *f = (uint8_t const*) &(font6_8[(c - 32) * 6]);
-
-    for (line = 0; line < 6; ++line, ++f)
-    {
-        ch = pgm_read_byte (f);
-        lcd_data (ch);
-    }
-    SBI (LCD_PORT, LCD_CS);
-}
-
-/* print string (null terminated) */
-void
-lcd_string_ram (char const *str)
-{
-    while (*str)
-    {
-        lcd_char (*str);
-        ++str;
-    }
-}
-
-/* print string (null terminated) */
-void
-lcd_string_pgm (char const *str)
-{
-    while (pgm_read_byte (str))
-    {
-        lcd_char (pgm_read_byte (str));
-        ++str;
-    }
-}
-
-/* print big (16x24) symbol */
-void
-lcd_big_char (uint8_t row, uint8_t col, char chr)
-{
-    uint8_t const *f0;
-    uint8_t const *f;
-    uint8_t r, c, y;
-    uint8_t ch;
-    y = (chr & 0x0F);
-
-    if (y < 6)
-        f0 = Tahoma15x24 + y * 45;
-    else
-        f0 = Tahoma15x24_5 + (y - 6) * 45;
-
-    for (r = 0; r < 3; ++r)
-    {
-        f = f0 + r;
-        lcd_pos ((row + r), col);
-        for (c = 0; c < 14; ++c)
-        {
-            ch = pgm_read_byte (f);
-            lcd_data (ch);
-            f = f + 3;
-        }
-    }
-    SBI (LCD_PORT, LCD_CS);
-}
-
-#else
-
-#include "font_ostin16.h"
-#define ARR_SIZE(x) sizeof (x) / (sizeof ((x)[0]))
-
-
-static void
-lcd_debug_led_flash (uint8_t n)
-{
-    SBI (DDRD, PD0);
-
-    while (n--)
-    {
-        SBI (PORTD, PD0);
-        _delay_ms (500);
-        CBI (PORTD, PD0);
-        _delay_ms (500);
-    }
-}
-
-
 static void
 lcd_find_char (uint8_t const *font, uint8_t ch, uint8_t **data)
 {
@@ -448,7 +354,7 @@ lcd_find_char (uint8_t const *font, uint8_t ch, uint8_t **data)
     }
 }
 
-void
+static void
 lcd_char (uint8_t c, uint8_t row, uint8_t *col)
 {
     uint8_t line;
@@ -489,7 +395,7 @@ lcd_string_ram (char const *str, uint8_t row, uint8_t col)
 {
     uint8_t c;
     uint8_t sp = pgm_read_byte (&font_Octin16 [ARR_SIZE (font_Octin16) - 1]);
-    while (c = *str)
+    while ((c = *str))
     {
         if (c == ' ')
             col += sp;
@@ -508,9 +414,8 @@ lcd_string_pgm (char const *str, uint8_t row, uint8_t col)
 {
     uint8_t c;
     uint8_t sp = pgm_read_byte (&font_Octin16 [ARR_SIZE (font_Octin16) - 1]);
-    lcd_debug_led_flash (sp);
 
-    while (c = pgm_read_byte (str))
+    while ((c = pgm_read_byte (str)))
     {
         if (c == ' ')
             col += sp;
@@ -522,7 +427,3 @@ lcd_string_pgm (char const *str, uint8_t row, uint8_t col)
         ++str;
     }
 }
-
-#endif
-
-#endif

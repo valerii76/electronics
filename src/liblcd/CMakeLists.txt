@@ -7,13 +7,10 @@ project (lcd)
 message ("Build lcd library")
 
 set (HEADER_FILES
-    src/font.h
-    src/font_15x24.h
-    src/font_15x24_5.h
-    src/nokia_1202.h)
+    nokia_1202.h)
 
 set (SOURCE_FILES
-    src/nokia_1202.c)
+    nokia_1202.c)
 
 add_library (lcd ${HEADER_FILES} ${SOURCE_FILES})
 
