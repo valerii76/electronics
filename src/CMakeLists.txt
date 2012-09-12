@@ -6,6 +6,10 @@ project (all)
 add_subdirectory (utils)
 include_directories (${BASE_DIRECTORY}/src/utils)
 
+# Menu
+add_subdirectory (libmenu)
+include_directories (${BASE_DIRECTORY}/src/libmenu)
+
 # LCD library
 add_subdirectory (liblcd)
 include_directories (${BASE_DIRECTORY}/src/liblcd)
