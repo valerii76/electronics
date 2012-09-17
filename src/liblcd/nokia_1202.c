@@ -18,8 +18,11 @@
 #include "nokia_1202.h"
 
 #include <avr/pgmspace.h>
+#include <util/delay.h>
 
-#include "font_ostin16.h"
+static font_data_t const *g_current_font;
+static uint8_t g_current_font_size;
+
 #define ARR_SIZE(x) sizeof (x) / (sizeof ((x)[0]))
 
 #if !defined (LCD_PORT)
@@ -59,12 +62,7 @@
 static void
 _lcd_delay (void)
 {
-    //_delay_ms(60);
-    //unsigned int a, c;
-    //for (a=0; a<100; a++)
-    //{
-        //c++;
-    //}
+    _delay_ms(60);
 }
 
 /* send byte to LCD */
@@ -91,7 +89,7 @@ lcd_byte (uint8_t i)
 }
 
 /* send command to LCD */
-static void
+void
 lcd_cmd (uint8_t i)
 {
     CBI (LCD_PORT, LCD_SCLK);
@@ -104,7 +102,7 @@ lcd_cmd (uint8_t i)
 }
 
 /* send data to LCD */
-static void
+void
 lcd_data (uint8_t i)
 {
     CBI (LCD_PORT, LCD_SCLK);
@@ -233,6 +231,7 @@ lcd_init (void)
     SBI (LCD_PORT, LCD_CS);
 }
 
+#if 0
 /* draw line */
 void
 lcd_draw_line (uint8_t xn, uint8_t yn, uint8_t xk, uint8_t yk)
@@ -330,28 +329,41 @@ lcd_draw_line (uint8_t xn, uint8_t yn, uint8_t xk, uint8_t yk)
     }
     lcd_data (data);
 }
+#endif
 
-static void
-lcd_find_char (uint8_t const *font, uint8_t ch, uint8_t **data)
+static uint8_t
+lcd_find_char (uint8_t ch, font_data_t *data)
 {
-    uint8_t w, h;
-    uint8_t i = 0;
-    uint8_t *f = (uint8_t*) &(font[1]);
-    *data = 0;
+    uint8_t mid;
+    uint8_t start = 0;
+    uint8_t end = g_current_font_size;
 
-    for (; i < font [0]; ++i)
+    if (!g_current_font_size)
+        return 0;
+
+    memcpy_P (data, &g_current_font [0], sizeof (font_data_t));
+    if (data->code > ch)
+        return 0;
+
+    memcpy_P (data, &g_current_font [end - 1], sizeof (font_data_t));
+    if (data->code < ch)
+        return 0;
+
+    while (start < end)
     {
-        if (pgm_read_byte (&f [0]) == ch)
-        {
-            /*lcd_debug_led_flash (3);*/
-            *data = &f [1];
-            return;
-        }
-        h = pgm_read_byte (&f [1]);
-        w = h & 0x3F;
-        h >>= 6;
-        f += w * h + 2;
+        mid = start + ((end - start) >> 1);
+        memcpy_P (data, &g_current_font [mid], sizeof (font_data_t));
+
+        if (data->code == ch)
+            return 1;
+
+        if (data->code > ch)
+            end = mid;
+        else
+            start = mid + 1;
     }
+
+    return 0;
 }
 
 static void
@@ -361,27 +373,24 @@ lcd_char (uint8_t c, uint8_t row, uint8_t *col)
     uint8_t ch;
     uint8_t w;
     uint8_t h;
-    uint8_t *data;
+    font_data_t data;
+    uint8_t const *glyph = 0;
 
-
-    lcd_find_char (font_Octin16, c, &data);
-
-    if (!data)
+    if (!lcd_find_char (c, &data))
         return;
 
-
-    h = pgm_read_byte (data);
+    h = data.size;
 
     w = h & 0x3F;
     h >>= 6;
-    ++data;
+    glyph = data.data;
 
     for (; h--;)
     {
         lcd_pos (row++, *col);
-        for (line = 0; line < w; ++line, ++data)
+        for (line = 0; line < w; ++line, ++glyph)
         {
-            ch = pgm_read_byte (data);
+            ch = pgm_read_byte (glyph);
             lcd_data (ch);
         }
     }
@@ -394,16 +403,10 @@ void
 lcd_string_ram (char const *str, uint8_t row, uint8_t col)
 {
     uint8_t c;
-    uint8_t sp = pgm_read_byte (&font_Octin16 [ARR_SIZE (font_Octin16) - 1]);
     while ((c = *str))
     {
-        if (c == ' ')
-            col += sp;
-        else
-        {
-            ++col;
-            lcd_char (*str, row, &col);
-        }
+        ++col;
+        lcd_char (*str, row, &col);
         ++str;
     }
 }
@@ -413,17 +416,18 @@ void
 lcd_string_pgm (char const *str, uint8_t row, uint8_t col)
 {
     uint8_t c;
-    uint8_t sp = pgm_read_byte (&font_Octin16 [ARR_SIZE (font_Octin16) - 1]);
 
     while ((c = pgm_read_byte (str)))
     {
-        if (c == ' ')
-            col += sp;
-        else
-        {
-            ++col;
-            lcd_char (pgm_read_byte (str), row, &col);
-        }
+        ++col;
+        lcd_char (pgm_read_byte (str), row, &col);
         ++str;
     }
+}
+
+void
+lcd_set_font (font_data_t const *font, uint8_t font_size)
+{
+    g_current_font = font;
+    g_current_font_size = font_size;
 }

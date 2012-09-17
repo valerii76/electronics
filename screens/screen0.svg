@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.2"
-     inkscape:cx="51.72222"
-     inkscape:cy="22.464044"
+     inkscape:zoom="11.313708"
+     inkscape:cx="56.121094"
+     inkscape:cy="31.351899"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -71,15 +71,145 @@
      transform="translate(0,-988.36214)">
     <text
        xml:space="preserve"
-       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Octin College Free;-inkscape-font-specification:Octin College Free"
-       x="3.0357144"
-       y="61.94643"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Octin College Free;-inkscape-font-specification:Octin College Free"
+       x="21"
+       y="1044.3622"
        id="text3020"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3022"
+         x="21"
+         y="1044.3622">TRIP DATA</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Octin College Free;-inkscape-font-specification:Octin College Free"
+       x="24"
+       y="995.36212"
+       id="text3021"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3023"
+         x="24"
+         y="995.36212">12.09.2012</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Octin College Free;-inkscape-font-specification:Octin College Free"
+       x="72"
+       y="995.36212"
+       id="text3025"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3027"
+         x="72"
+         y="995.36212">22:30</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.58257592px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 4,1006.0969 14,0 0,-7.99987 -14,7.99987"
+       id="path3029"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Octin College Free;-inkscape-font-specification:Octin College Free"
+       x="20"
+       y="1006.3621"
+       id="text3031"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3033"
+         x="20"
+         y="1006.3621">12%</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Octin College Free;-inkscape-font-specification:Octin College Free"
+       x="53"
+       y="1007.3621"
+       id="text3035"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3037"
+         x="53"
+         y="1007.3621"
+         style="font-size:16px">32.0</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Octin College Free;-inkscape-font-specification:Octin College Free"
+       x="78"
+       y="1010.3621"
+       id="text3041"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3043"
+         x="78"
+         y="1010.3621">kmh</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Octin College Free;-inkscape-font-specification:Octin College Free"
+       x="7.7781744"
+       y="45.792"
+       id="text3045"
        sodipodi:linespacing="125%"
        transform="translate(0,988.36214)"><tspan
          sodipodi:role="line"
-         id="tspan3022"
-         x="3.0357144"
-         y="61.94643">Main window</tspan></text>
+         id="tspan3047"
+         x="7.7781744"
+         y="45.792" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Octin College Free;-inkscape-font-specification:Octin College Free"
+       x="8.5736694"
+       y="44.466175"
+       id="text3049"
+       sodipodi:linespacing="125%"
+       transform="translate(0,988.36214)"><tspan
+         sodipodi:role="line"
+         id="tspan3051"
+         x="8.5736694"
+         y="44.466175" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Octin College Free;-inkscape-font-specification:Octin College Free"
+       x="8.8388348"
+       y="46.852661"
+       id="text3053"
+       sodipodi:linespacing="125%"
+       transform="translate(0,988.36214)"><tspan
+         sodipodi:role="line"
+         id="tspan3055"
+         x="8.8388348"
+         y="46.852661" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Octin College Free;-inkscape-font-specification:Octin College Free"
+       x="64.258331"
+       y="44.289398"
+       id="text3057"
+       sodipodi:linespacing="125%"
+       transform="translate(0,988.36214)"><tspan
+         sodipodi:role="line"
+         id="tspan3059"
+         x="64.258331"
+         y="44.289398" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Octin College Free;-inkscape-font-specification:Octin College Free"
+       x="50"
+       y="1025.3622"
+       id="text3061"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3063"
+         x="50"
+         y="1025.3622">156.00</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Octin College Free;-inkscape-font-specification:Octin College Free"
+       x="1"
+       y="1027.3622"
+       id="text3065"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3067"
+         x="1"
+         y="1027.3622">20:45.00</tspan></text>
   </g>
 </svg>

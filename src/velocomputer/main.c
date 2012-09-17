@@ -20,8 +20,6 @@
 
 #include "config.h"
 
-#include <stdlib.h>
-
 #include "nokia_1202.h"
 /*#include "math/fixed.h"*/
 #include "dbg_flash.h"
@@ -29,49 +27,33 @@
 
 #include <util/delay.h>
 
+#include "font_5thagent12.h"
+#include "font_5thagent24.h"
+
 int main (int argc, char *argv[])
 {
-    /*fixed_t x = INT2FIXED (34), y = 0, d;*/
-    /*int8_t i;*/
-
     dbg_uart_init (2400);
 
     lcd_init();
     lcd_clr();
-    /*lcd_draw_line (0, 0, 68, 96);*/
-    /*lcd_draw_line (68, 0, 0, 96);*/
-    lcd_string_pgm (PSTR ("3VSOFT"), (uint8_t) 4, (uint8_t) 20);
 
-    /*d = fixed_div (FM_PI << 1, INT2FIXED (96));*/
+    /*lcd_set_font (font_5thagent12n, FONT_5THAGENT12N_NUM_GLYPS);*/
+    /*lcd_string_pgm (PSTR ("0123456789"), (uint8_t) 0, (uint8_t) 0);*/
 
-    /*for (i = 1; i < 96; ++i)*/
-    /*{*/
-        /*fixed_t s, c;*/
-        /*fixed_t new_x = INT2FIXED (34);*/
-        /*y += d;*/
-        /*fixed_sico (y, &s, &c);*/
-        /*new_x += fixed_mul (s, INT2FIXED (34));*/
-        /*lcd_draw_line (FIXED2INT (x), i-1, FIXED2INT (new_x), i);*/
-        /*x = new_x;*/
-    /*}*/
+    /*lcd_set_font (font_5thagent24n, FONT_5THAGENT24N_NUM_GLYPS);*/
+    /*lcd_string_pgm (PSTR ("9789"), (uint8_t) 1, (uint8_t) 0);*/
 
-    /*lcd_string_pgm (PSTR("Valerii76"));*/
+    /*lcd_set_font (font_5thagent12c, FONT_5THAGENT12C_NUM_GLYPS);*/
+    /*lcd_string_pgm (PSTR ("ABCD"), (uint8_t) 3, (uint8_t) 0);*/
 
-    /*while (1)*/
-    /*{*/
-        /*x = rand () % 68;*/
-        /*y = rand () % 96;*/
+    /*lcd_set_font (font_5thagent24c, FONT_5THAGENT24C_NUM_GLYPS);*/
+    /*lcd_string_pgm (PSTR ("ABCD"), (uint8_t) 4, (uint8_t) 0);*/
 
-        /*w = rand () % (68 - x);*/
-        /*h = rand () % (96 - y);*/
+    lcd_set_font (font_5thagent12, FONT_5THAGENT12_NUM_GLYPS);
+    lcd_string_pgm (PSTR ("VALERII76:.,+-"), (uint8_t) 0, (uint8_t) 0);
 
-        /*lcd_draw_line (x, y, x + w, y + h);*/
-    /*}*/
-
-
-    /*lcd_draw_line (0, 0, 68, 96);*/
-    /*lcd_draw_line (68, 0, 0, 96);*/
-
+    lcd_set_font (font_5thagent24, FONT_5THAGENT24_NUM_GLYPS);
+    lcd_string_pgm (PSTR (":+-.,"), (uint8_t) 4, (uint8_t) 0);
 
     return 0;
 }
