@@ -10,6 +10,10 @@ include_directories (${BASE_DIRECTORY}/src/utils)
 add_subdirectory (libmenu)
 include_directories (${BASE_DIRECTORY}/src/libmenu)
 
+# TWI
+add_subdirectory (libtwi)
+include_directories (${BASE_DIRECTORY}/src/libtwi)
+
 # LCD library
 add_subdirectory (liblcd)
 include_directories (${BASE_DIRECTORY}/src/liblcd)
