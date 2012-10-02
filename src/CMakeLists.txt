@@ -18,5 +18,9 @@ include_directories (${BASE_DIRECTORY}/src/libtwi)
 add_subdirectory (liblcd)
 include_directories (${BASE_DIRECTORY}/src/liblcd)
 
+# Devices library
+add_subdirectory (libdev)
+include_directories (${BASE_DIRECTORY}/src/libdev)
+
 # Main velocomputer project
 add_subdirectory (velocomputer)

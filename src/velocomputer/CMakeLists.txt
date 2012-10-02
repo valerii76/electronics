@@ -25,5 +25,13 @@ AVR_CREATE_TEXT (velocomputer)
 AVR_CREATE_LST (velocomputer)
 AVR_CREATE_EEPROM (velocomputer)
 
-add_dependencies (velocomputer ${LCD_LIBRARY} ${UTILS_LIBRARY})
-target_link_libraries (velocomputer ${LCD_LIBRARY} ${UTILS_LIBRARY})
+add_dependencies (velocomputer
+                  ${LCD_LIBRARY}
+                  ${UTILS_LIBRARY}
+                  ${TWI_LIBRARY}
+                  ${DEVICES_LIBRARY})
+target_link_libraries (velocomputer
+                       ${LCD_LIBRARY}
+                       ${UTILS_LIBRARY}
+                       ${TWI_LIBRARY}
+                       ${DEVICES_LIBRARY})

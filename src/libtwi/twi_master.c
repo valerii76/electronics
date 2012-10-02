@@ -25,7 +25,10 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <util/delay.h>
 #include "twi_master.h"
+
+#include "dbg_flash.h"
 
 static unsigned char TWI_buf[ TWI_BUFFER_SIZE ];    // Transceiver buffer
 static unsigned char TWI_msgSize;                   // Number of bytes to be transmitted.
@@ -79,6 +82,8 @@ void TWI_Start_Transceiver_With_Data( unsigned char *msg, unsigned char msgSize 
 {
     unsigned char temp;
 
+    /*DBG_FLASH (DDRB, PORTB, 2, 3);*/
+    /*_delay_ms (5000);*/
     while ( TWI_Transceiver_Busy() )
         ;             // Wait until TWI is ready for next transmission.
 
@@ -95,6 +100,8 @@ void TWI_Start_Transceiver_With_Data( unsigned char *msg, unsigned char msgSize 
            (1<<TWIE)|(1<<TWINT)|                  // Enable TWI Interupt and clear the flag.
            (0<<TWEA)|(1<<TWSTA)|(0<<TWSTO)|       // Initiate a START condition.
            (0<<TWWC);                             //
+    /*DBG_FLASH (DDRB, PORTB, 2, 3);*/
+    /*_delay_ms (5000);*/
 }
 
 /****************************************************************************

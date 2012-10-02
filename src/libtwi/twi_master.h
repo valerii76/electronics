@@ -23,9 +23,9 @@
 /****************************************************************************
   TWI Status/Control register definitions
 ****************************************************************************/
-#define TWI_BUFFER_SIZE 4   // Set this to the largest message size that will be sent including address byte.
+#define TWI_BUFFER_SIZE 20              // Set this to the largest message size that will be sent including address byte.
 
-#define TWI_TWBR            0x0C        // TWI Bit rate Register setting.
+#define TWI_TWBR            0x0A        // TWI Bit rate Register setting.
                                         // Se Application note for detailed 
                                         // information on setting this value.
 // Not used defines!
@@ -40,7 +40,7 @@ union TWI_statusReg                       // Status byte holding flags.
     unsigned char all;
     struct
     {
-        unsigned char lastTransOK:1;      
+        unsigned char lastTransOK:1;
         unsigned char unusedBits:7;
     };
 };
@@ -69,18 +69,18 @@ unsigned char TWI_Get_Data_From_Transceiver( unsigned char *, unsigned char );
 /****************************************************************************
   TWI State codes
 ****************************************************************************/
-// General TWI Master staus codes                      
-#define TWI_START                  0x08  // START has been transmitted  
+// General TWI Master staus codes
+#define TWI_START                  0x08  // START has been transmitted
 #define TWI_REP_START              0x10  // Repeated START has been transmitted
 #define TWI_ARB_LOST               0x38  // Arbitration lost
 
-// TWI Master Transmitter staus codes                      
+// TWI Master Transmitter staus codes
 #define TWI_MTX_ADR_ACK            0x18  // SLA+W has been tramsmitted and ACK received
-#define TWI_MTX_ADR_NACK           0x20  // SLA+W has been tramsmitted and NACK received 
+#define TWI_MTX_ADR_NACK           0x20  // SLA+W has been tramsmitted and NACK received
 #define TWI_MTX_DATA_ACK           0x28  // Data byte has been tramsmitted and ACK received
-#define TWI_MTX_DATA_NACK          0x30  // Data byte has been tramsmitted and NACK received 
+#define TWI_MTX_DATA_NACK          0x30  // Data byte has been tramsmitted and NACK received
 
-// TWI Master Receiver staus codes  
+// TWI Master Receiver staus codes
 #define TWI_MRX_ADR_ACK            0x40  // SLA+R has been tramsmitted and ACK received
 #define TWI_MRX_ADR_NACK           0x48  // SLA+R has been tramsmitted and NACK received
 #define TWI_MRX_DATA_ACK           0x50  // Data byte has been received and ACK tramsmitted
