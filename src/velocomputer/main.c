@@ -52,7 +52,7 @@ int main (int argc, char *argv[])
 
     lcd_init();
 
-    TWI_Master_Initialise ();
+    twi_master_initialise ();
 
     mpl115a_read_coefficients (&a0, &b1, &b2, &c12);
 

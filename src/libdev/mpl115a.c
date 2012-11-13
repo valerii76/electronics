@@ -51,11 +51,11 @@ mpl115a_read_coefficients (int16_t *a0,
 
     data [0] = 0xC0;
     data [1] = 0x4;
-    TWI_Start_Transceiver_With_Data (data, 2);
+    twi_start_transceiver_with_data (data, 2);
 
     data [0] = 0xC1;
-    TWI_Start_Transceiver_With_Data (data, 9);
-    TWI_Get_Data_From_Transceiver (data, 9);
+    twi_start_transceiver_with_data (data, 9);
+    twi_get_data_from_transceiver (data, 9);
 
     *a0 = (data [1] << 8) | data [2];
     *b1 = (data [3] << 8) | data [4];
@@ -73,17 +73,17 @@ mpl115a_calc_pcomp (int16_t a0, int16_t b1, int16_t b2, int16_t c12)
     data [0] = 0xC0;
     data [1] = 0x12;
     data [2] = 0;
-    TWI_Start_Transceiver_With_Data (data, 3);
+    twi_start_transceiver_with_data (data, 3);
     _delay_ms (5);
 
     /* read results */
     data [0] = 0xC0;
     data [1] = 0;
-    TWI_Start_Transceiver_With_Data (data, 2);
+    twi_start_transceiver_with_data (data, 2);
 
     data [0] = 0xC1;
-    TWI_Start_Transceiver_With_Data (data, 5);
-    TWI_Get_Data_From_Transceiver (data, 5);
+    twi_start_transceiver_with_data (data, 5);
+    twi_get_data_from_transceiver (data, 5);
     padc = (data [1] << 8) | data [2];
     tadc = (data [3] << 8) | data [4];
 
