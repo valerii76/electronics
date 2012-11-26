@@ -5,11 +5,13 @@ project (utils)
 message ("Build utils library")
 
 set (HEADER_FILES
+    ds1wire.h
     twi_master.h
     dbg_uart.h
     dbg_flash.h)
 
 set (SOURCE_FILES
+    ds1wire.c
     twi_master.c
     dbg_uart.c)
 
