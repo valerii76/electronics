@@ -94,67 +94,8 @@ _ds1wire_send_bit (uint8_t bit)
     }
 }
 
-uint8_t ds1wire_start ()
-{
-    /* send reset pulse */
-    SBI (DS1WIRE_DDR, DS1WIRE_LINE);
-    _delay_us (480);
-    CBI (DS1WIRE_DDR, DS1WIRE_LINE);
-
-    /* wait answer from device */
-    _delay_us (60);
-
-    /* check device answer */
-    if (ds1wire_line_status () == DS1WIRE_HIGH)
-    {
-        return DS1WIRE_NO_DEVICES;
-    }
-
-    /* wait when device drop line */
-    _delay_us (240);
-
-    return DS1WIRE_OK;
-}
-
-void ds1wire_send_byte (uint8_t b)
-{
-    uint8_t i = 8;
-
-    for (; i--; b >>= 1)
-    {
-        _ds1wire_send_bit (b & 0x1);
-
-        /* delay between frames */
-        _delay_us (5);
-    }
-}
-
-uint8_t ds1wire_receive_byte ()
-{
-    uint8_t i = 8;
-    uint8_t b = 0;
-
-    for (; i--;)
-    {
-        if (_ds1wire_receive_bit ())
-            b |= 0x80;
-
-        if (i > 0)
-            b >>= 1;
-
-        /* delay between frames */
-        _delay_us (5);
-    }
-
-    return b;
-}
-
-uint8_t ds1wire_line_status (void)
-{
-    return ((DS1WIRE_PIN & (1 << DS1WIRE_LINE)) ? DS1WIRE_HIGH : DS1WIRE_LOW);
-}
-
-void ds1wire_search_rom (ds1wire_add_address add_func)
+static void
+_ds1wire_search_address (ds1wire_add_address add_func, uint8_t cmd)
 {
     uint8_t ROM_NO [8];
     uint8_t id_bit;
@@ -169,11 +110,6 @@ void ds1wire_search_rom (ds1wire_add_address add_func)
     uint8_t rom_byte_mask;
     uint8_t rom_byte_number;
     uint8_t crc8;
-
-    if (!add_func)
-        return;
-
-    dbg_uart_send_string ("ds1wire_search_rom...start");
 
     last_disrepancy = 0;
     last_device_flag = 0;
@@ -193,7 +129,7 @@ void ds1wire_search_rom (ds1wire_add_address add_func)
             return;
 
         /* search all ROM */
-        ds1wire_send_byte (SEARCH_ROM);
+        ds1wire_send_byte (cmd);
 
         do
         {
@@ -264,6 +200,129 @@ void ds1wire_search_rom (ds1wire_add_address add_func)
 
     }
     while (!last_device_flag);
+}
 
-    dbg_uart_send_string ("ds1wire_search_rom...done");
+uint8_t
+ds1wire_start ()
+{
+    /* send reset pulse */
+    SBI (DS1WIRE_DDR, DS1WIRE_LINE);
+    _delay_us (480);
+    CBI (DS1WIRE_DDR, DS1WIRE_LINE);
+
+    /* wait answer from device */
+    _delay_us (60);
+
+    /* check device answer */
+    if (ds1wire_line_status () == DS1WIRE_HIGH)
+    {
+        return DS1WIRE_NO_DEVICES;
+    }
+
+    /* wait when device drop line */
+    _delay_us (240);
+
+    return DS1WIRE_OK;
+}
+
+void
+ds1wire_send_byte (uint8_t b)
+{
+    uint8_t i = 8;
+
+    for (; i--; b >>= 1)
+    {
+        _ds1wire_send_bit (b & 0x1);
+
+        /* delay between frames */
+        _delay_us (5);
+    }
+}
+
+uint8_t
+ds1wire_receive_byte ()
+{
+    uint8_t i = 8;
+    uint8_t b = 0;
+
+    for (; i--;)
+    {
+        if (_ds1wire_receive_bit ())
+            b |= 0x80;
+
+        if (i > 0)
+            b >>= 1;
+
+        /* delay between frames */
+        _delay_us (5);
+    }
+
+    return b;
+}
+
+uint8_t
+ds1wire_line_status (void)
+{
+    return ((DS1WIRE_PIN & (1 << DS1WIRE_LINE)) ? DS1WIRE_HIGH : DS1WIRE_LOW);
+}
+
+void
+ds1wire_search_rom (ds1wire_add_address add_func)
+{
+    if (!add_func)
+        return;
+
+    _ds1wire_search_address (add_func, SEARCH_ROM);
+}
+
+void
+ds1wire_alarm_search (ds1wire_add_address add_func)
+{
+    if (!add_func)
+        return;
+
+    _ds1wire_search_address (add_func, ALARM_SEARCH);
+}
+
+uint8_t
+ds1wire_read_rom (uint8_t address [8])
+{
+    uint8_t i;
+
+    if (ds1wire_start () != DS1WIRE_OK)
+        return DS1WIRE_NO_DEVICES;
+
+    ds1wire_send_byte (READ_ROM);
+
+    for (i = 0; i < 8; ++i)
+        address [i] = ds1wire_receive_byte ();
+
+    return DS1WIRE_OK;
+}
+
+uint8_t
+ds1wire_match_rom (uint8_t const address [8])
+{
+    uint8_t i;
+
+    if (ds1wire_start () != DS1WIRE_OK)
+        return DS1WIRE_NO_DEVICES;
+
+    ds1wire_send_byte (MATCH_ROM);
+
+    for (i = 0; i < 8; ++i)
+        ds1wire_send_byte (address [i]);
+
+    return DS1WIRE_OK;
+}
+
+uint8_t
+ds1wire_skip_rom (void)
+{
+    if (ds1wire_start () != DS1WIRE_OK)
+        return DS1WIRE_NO_DEVICES;
+
+    ds1wire_send_byte (SKIP_ROM);
+
+    return DS1WIRE_OK;
 }

@@ -62,4 +62,24 @@ uint8_t ds1wire_line_status (void);
  */
 void ds1wire_search_rom (ds1wire_add_address add_func);
 
+/*
+ * read ROM
+ */
+uint8_t ds1wire_read_rom (uint8_t address [8]);
+
+/*
+ * match ROM
+ */
+uint8_t ds1wire_match_rom (uint8_t const address [8]);
+
+/*
+ * skip ROM
+ */
+uint8_t ds1wire_skip_rom (void);
+
+/*
+ * alarm search
+ */
+void ds1wire_alarm_search (ds1wire_add_address add_func);
+
 #endif//__DS1WIRE_H__

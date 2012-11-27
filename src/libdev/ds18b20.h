@@ -19,6 +19,7 @@
 #define __DS18B20_H__
 
 #include <inttypes.h>
+#include "ds1wire.h"
 
 enum
 {
@@ -29,21 +30,50 @@ enum
 /*
  * search ds18b20 devices
  */
-uint8_t ds18b20_search (void);
+void ds18b20_search (ds1wire_add_address address);
 
 /*
- * number of ds18b20 devices
+ * alarm search ds18b20 devices
  */
-uint8_t ds18b20_device_number (void);
-
-/*
- * get address for device
- */
-uint8_t const* ds18b20_device_address (uint8_t i);
+void ds18b20_alarm_search (ds1wire_add_address address);
 
 /*
  * get temperature from device
+ * if address == NULL works only for one device
  */
-int16_t ds18b20_temperature (uint8_t *address);
+uint16_t ds18b20_temperature (uint8_t const *address,
+                              uint8_t is_parasite_power);
+
+/*
+ * read power supply status
+ * if address == NULL works only for one device
+ */
+uint8_t ds18b20_is_parasite_powered (uint8_t const *address);
+
+/*
+ * read scratchpad
+ * if address == NULL works only for one device
+ */
+uint8_t ds18b20_read_scratchpad (uint8_t const *address,
+                                 uint8_t data[9]);
+
+/*
+ * write scratchpad
+ * if address == NULL works only for one device
+ * data [Th, Tl, config] bytes
+ */
+uint8_t ds18b20_write_scratchpad (uint8_t const *address, uint8_t const data [3]);
+
+/*
+ * copy scratchpad (Th, Tl, config) to eeprom
+ * if address == NULL works only for one device
+ */
+uint8_t ds18b20_copy_scratchpad (uint8_t const *address,
+                                 uint8_t is_parasite_power);
+
+/*
+ * recall e2 (recall Th, Tl, config from eeprom)
+ */
+uint8_t ds18b20_recall_e2 (uint8_t const *address);
 
 #endif//__DS18B20_H__

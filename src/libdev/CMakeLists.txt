@@ -18,5 +18,7 @@ add_library (devices ${HEADER_FILES} ${SOURCE_FILES})
 
 add_dependencies (devices
                   ${UTILS_LIBRARY})
+target_link_libraries (devices
+                       ${UTILS_LIBRARY})
 
 set (DEVICES_LIBRARY devices CACHE PATH "devices library available")

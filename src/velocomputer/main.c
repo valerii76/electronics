@@ -27,6 +27,7 @@
 #include "dbg_uart.h"
 #include "twi_master.h"
 #include "ds1wire.h"
+#include "ds18b20.h"
 
 #include <util/delay.h>
 
@@ -50,7 +51,8 @@ void show_address (uint8_t const *address)
             dbg_uart_send (buf [1]);
         else
             dbg_uart_send ('0');
-        dbg_uart_send (':');
+        if (i < 7)
+            dbg_uart_send (':');
     }
     dbg_uart_send (0xA);
     dbg_uart_send (0xD);
@@ -80,6 +82,7 @@ int main (int argc, char *argv[])
         int16_t pcomp;
         uint16_t kpa;
         uint16_t mmhg;
+        uint16_t temp16;
 
         lcd_clr();
 
@@ -94,33 +97,12 @@ int main (int argc, char *argv[])
         lcd_string_ram (itoa (kpa >> 4, buf, 10), (uint8_t) 0, (uint8_t) 0);
         lcd_string_ram (itoa (mmhg >> 4, buf, 10), (uint8_t) 1, (uint8_t) 0);
 
-        ds1wire_search_rom (show_address);
+        /*ds1wire_search_rom (show_address);*/
+        /*ds1wire_alarm_search (show_address);*/
 
-        /* DS18B20 device */
-        if (ds1wire_start () == DS1WIRE_OK)
-        {
-            uint8_t temp[2];
-            /* skip ROM command */
-            ds1wire_send_byte (0xCC);
+        temp16 = ds18b20_temperature (NULL, ds18b20_is_parasite_powered (NULL));
 
-            /* send convert temperature command */
-            ds1wire_send_byte (0x44);
-
-            _delay_us (10);
-            /*while (ds1wire_line_status () == DS1WIRE_LOW)*/
-                /*;*/
-
-            ds1wire_start ();
-
-            ds1wire_send_byte (0xCC);
-            ds1wire_send_byte (0xBE);
-
-            temp [0] = ds1wire_receive_byte ();
-            temp [1] = ds1wire_receive_byte ();
-
-            lcd_string_ram (itoa (temp [0], buf, 10), (uint8_t) 3, (uint8_t) 0);
-            lcd_string_ram (itoa (temp [1], buf, 10), (uint8_t) 4, (uint8_t) 0);
-        }
+        dbg_uart_send_string (itoa (temp16, buf, 16));
 
         _delay_ms (1000);
     }
